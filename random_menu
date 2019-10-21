@@ -1,0 +1,40 @@
+import json
+import random as rand
+import types
+
+class RandomMenu():
+    def __init__(self, vege_num=3, meat_num=2, soup_num=1, people=6):
+        self.vege_num = vege_num
+        self.meat_num = meat_num
+        self.soup_num = soup_num
+        self.people = people
+   
+
+    def random_choice(self, json):
+        self.all_vege = {**json['炒素菜'], **json['红烧素菜']}
+        self.all_meat = {**json['炒荤菜'], **json['炒海鲜'], **json['红烧荤菜'], **json['红烧海鲜'], **json['水煮']}
+        self.all_soup = json['汤']
+        self.vege = rand.sample(list(self.all_vege.items()), self.vege_num)
+        self.meat = rand.sample(list(self.all_meat.items()), self.meat_num)
+        self.soup = rand.sample(list(self.all_soup.items()), self.soup_num)
+        details = self.vege + self.meat + self.soup
+        cuisins = []
+        price = 0
+        for i in details:
+            cuisins.append(i[0])
+            price += int(i[1])
+
+        avg = price / self.people
+        return cuisins, price, avg
+            
+
+with open('menu.json', 'r') as f:
+    menu = json.load(f)
+    rm = RandomMenu(vege_num=3, meat_num=2, soup_num=1)
+    for i in range(5):
+        cuisins, price, avg = rm.random_choice(menu)
+        print("菜单： ", cuisins)
+        print("总价： ", price)
+        print("人均： ",  avg)
+    
+    
